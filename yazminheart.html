@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Yazmin Heart Reveal</title>
+  <style>
+    body {
+      margin: 0;
+      background: #fff0f5;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .heart-container {
+      position: relative;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .heart {
+      width: 100px;
+      height: 90px;
+      background: red;
+      position: relative;
+      transform: rotate(-45deg);
+      transition: transform 0.3s ease;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      width: 100px;
+      height: 90px;
+      background: red;
+      border-radius: 50%;
+      position: absolute;
+    }
+
+    .heart::before {
+      top: -50px;
+      left: 0;
+    }
+
+    .heart::after {
+      left: 50px;
+      top: 0;
+    }
+
+    .text {
+      position: absolute;
+      top: 120px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 26px;
+      color: #e60073;
+      font-weight: bold;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .text.show {
+      opacity: 1;
+    }
+
+    .particle {
+      position: absolute;
+      color: #ff66b2;
+      font-size: 16px;
+      animation: fly 1s ease-out forwards;
+      pointer-events: none;
+    }
+
+    @keyframes fly {
+      0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(calc(-50px + 100px * var(--x)), calc(-100px * var(--y))) scale(0.5);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="heart-container" onclick="revealYazmin(event)" ontouchstart="revealYazmin(event)">
+    <div class="heart"></div>
+    <div class="text" id="text">Yazmin</div>
+  </div>
+
+  <!-- Optional soft chime sound -->
+  <audio id="chime" src="https://cdn.pixabay.com/audio/2022/03/15/audio_1e41214fae.mp3" preload="auto"></audio>
+
+  <script>
+    function revealYazmin(e) {
+      const text = document.getElementById('text');
+      const sound = document.getElementById('chime');
+      text.classList.add('show');
+      sound.play();
+
+      const x = (e.touches ? e.touches[0].clientX : e.clientX);
+      const y = (e.touches ? e.touches[0].clientY : e.clientY);
+
+      for (let i = 0; i < 20; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        particle.textContent = '💖';
+        particle.style.left = `${x}px`;
+        particle.style.top = `${y}px`;
+        particle.style.setProperty('--x', Math.random().toFixed(2));
+        particle.style.setProperty('--y', (0.5 + Math.random() * 0.5).toFixed(2));
+
+        document.body.appendChild(particle);
+
+        setTimeout(() => {
+          particle.remove();
+        }, 1000);
+      }
+    }
+  </script>
+</body>
+</html>
